@@ -22,7 +22,7 @@
 7. To prepare the build directory for upload, zip it using the command `npm run zip`. This creates a zip file named `ts-lambda-screenshot`.
 8. Navigate to the AWS console and create an S3 bucket. Upload the zip file and copy the S3 URI.
 9. Create a new AWS Lambda function with the following general configuration:
-   
+   <img width="1307" alt="265008781-2f188700-ae8a-4eee-8128-34169fec75c5" src="https://github.com/sjcodebook/LinkedIn-Profile-Data-Scraper-App/assets/45676934/db81b148-c9d7-4afc-bcc7-42259ae4b00b">
 10. To upload the source code to the Lambda function, select the 'Amazon S3 location' option from the 'Upload From' dropdown menu.
 11. Paste the S3 object link that you copied in the previous step and click 'Save'.
 12. The code will be uploaded and ready for use.
