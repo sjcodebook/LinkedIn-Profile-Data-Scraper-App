@@ -1,0 +1,62 @@
+{
+  "name": "linkedin-profile-data-scraper-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "lint": "next lint",
+    "start": "next start",
+    "db:push": "npx prisma db push",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@fontsource/roboto": "^5.0.5",
+    "@mui/material": "^5.14.0",
+    "@prisma/client": "^5.0.0",
+    "@t3-oss/env-nextjs": "^0.3.1",
+    "@tanstack/react-query": "^4.29.7",
+    "@trpc/client": "^10.26.0",
+    "@trpc/next": "^10.26.0",
+    "@trpc/react-query": "^10.26.0",
+    "@trpc/server": "^10.26.0",
+    "@types/papaparse": "^5.3.7",
+    "all-the-cities": "^3.1.0",
+    "axios": "^1.4.0",
+    "i18n-iso-countries": "^7.6.0",
+    "isemail": "^3.2.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.43",
+    "mui-file-input": "^2.0.3",
+    "next": "^13.4.9",
+    "papaparse": "^5.4.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "superjson": "1.12.2",
+    "tree-kill": "^1.2.2",
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@types/all-the-cities": "^3.1.0",
+    "@types/eslint": "^8.37.0",
+    "@types/lodash": "^4.14.197",
+    "@types/node": "^18.16.0",
+    "@types/react": "^18.2.6",
+    "@types/react-dom": "^18.2.4",
+    "@typescript-eslint/eslint-plugin": "6.0.0",
+    "@typescript-eslint/parser": "6.0.0",
+    "eslint": "^8.40.0",
+    "eslint-config-next": "^13.4.2",
+    "prisma": "^5.0.0",
+    "typescript": "^5.0.4"
+  },
+  "ct3aMetadata": {
+    "initVersion": "7.16.0"
+  },
+  "engines": {
+    "node": "^18.15.0"
+  }
+}

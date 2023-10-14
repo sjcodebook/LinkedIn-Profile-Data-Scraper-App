@@ -1,0 +1,226 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider     = "mysql"
+    url          = env("DATABASE_URL")
+    relationMode = "prisma"
+}
+
+model UserData {
+    id                  String               @id @default(uuid())
+    firstName           String?              @map("first_name")
+    lastName            String?              @map("last_name")
+    role                String?              @map("role")
+    company             String?              @map("company")
+    email               String?              @map("email")
+    seniority           String?              @map("seniority")
+    department          String?              @map("department")
+    stage               String?              @map("stage")
+    industry            String?              @map("industry")
+    personalLinkedinUrl String?              @map("personal_linkedin_url")
+    city                String?              @map("city")
+    state               String?              @map("state")
+    country             String?              @map("country")
+    companyWebsite      String?              @map("company_website")
+    companyLinkedinUrl  String?              @map("company_linkedin_url")
+    companyFacebookUrl  String?              @map("company_facebook_url")
+    companyTwitterUrl   String?              @map("company_twitter_url")
+    companyCity         String?              @map("company_city")
+    companyState        String?              @map("company_state")
+    companyCountry      String?              @map("company_country")
+    rawData             Json?                @map("raw_data")
+    isScraped           Boolean?             @default(false) @map("is_scraped")
+    scrapedAt           DateTime?            @map("scraped_at")
+    createdAt           DateTime             @default(now()) @map("created_at")
+    updatedAt           DateTime             @updatedAt @map("updated_at")
+    ScrapedProfileData  ScrapedProfileData[]
+
+    @@index([firstName, lastName], map: "firstname_lastname_index")
+    @@index([firstName], map: "firstname_index")
+    @@index([lastName], map: "lastname_index")
+    @@index([role], map: "role_index")
+    @@index([company], map: "company_index")
+    @@index([email], map: "email_index")
+    @@index([createdAt], map: "createdAt_index")
+    @@index([updatedAt], map: "updatedAt_index")
+    @@index([isScraped], map: "isScraped_index")
+    @@map("user_data")
+}
+
+model RawScrapedData {
+    id        String   @id @default(uuid())
+    rawData   Json?    @map("raw_data")
+    isParsed  Boolean? @default(false) @map("is_parsed")
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("raw_scraped_data")
+}
+
+model AuthCookie {
+    id     String  @id @default(uuid())
+    cookie String? @map("cookie")
+
+    @@map("auth_cookie")
+}
+
+model ScrapedProfileData {
+    id                      String                              @id @default(uuid())
+    url                     String?                             @map("url") @db.MediumText
+    title                   String?                             @map("title") @db.MediumText
+    fullName                String?                             @map("full_name") @db.MediumText
+    city                    String?                             @map("city")
+    country                 String?                             @map("country")
+    province                String?                             @map("province")
+    description             String?                             @map("description") @db.MediumText
+    createdAt               DateTime                            @default(now()) @map("created_at")
+    updatedAt               DateTime                            @updatedAt @map("updated_at")
+    userId                  String                              @map("user_id")
+    user                    UserData                            @relation(fields: [userId], references: [id])
+    skills                  ScrapedSkillData[]
+    educations              ScrapedEducationData[]
+    experiences             ScrapedExperienceData[]
+    certifications          ScrapedCertificationData[]
+    projectAccomplishments  ScrapedProjectAccomplishmentData[]
+    languageAccomplishments ScrapedLanguageAccomplishmentData[]
+
+    @@index([title(length: 768)], map: "title_index")
+    @@index([fullName(length: 768)], map: "fullName_index")
+    @@index([city, country], map: "city_country_index")
+    @@index([province], map: "province_index")
+    @@index([userId])
+    @@map("scraped_profile_data")
+}
+
+model ScrapedSkillData {
+    id                 String             @id @default(uuid())
+    skillName          String?            @map("skill_name") @db.MediumText
+    endorsementCompany String?            @map("endorsement_company") @db.MediumText
+    createdAt          DateTime           @default(now()) @map("created_at")
+    updatedAt          DateTime           @updatedAt @map("updated_at")
+    scrapedProfileId   String             @map("scraped_profile_id")
+    profile            ScrapedProfileData @relation(fields: [scrapedProfileId], references: [id])
+
+    @@index([skillName(length: 768)], map: "skillName_index")
+    @@index([endorsementCompany(length: 768)], map: "endorsementCompany_index")
+    @@index([scrapedProfileId], map: "scrapedProfileId_index")
+    @@map("scraped_skill_data")
+}
+
+model ScrapedEducationData {
+    id               String                      @id @default(uuid())
+    endDate          DateTime?                   @map("end_date")
+    startDate        DateTime?                   @map("start_date")
+    degreeName       String?                     @map("degree_name") @db.MediumText
+    schoolName       String?                     @map("school_name") @db.MediumText
+    description      String?                     @map("description") @db.MediumText
+    durationInDays   Int?                        @map("duration_in_days")
+    createdAt        DateTime                    @default(now()) @map("created_at")
+    updatedAt        DateTime                    @updatedAt @map("updated_at")
+    scrapedProfileId String                      @map("scraped_profile_id")
+    profile          ScrapedProfileData          @relation(fields: [scrapedProfileId], references: [id])
+    media            ScrapedEducationMediaData[]
+
+    @@index([startDate], map: "startDate_index")
+    @@index([endDate], map: "endDate_index")
+    @@index([degreeName(length: 768)], map: "degreeName_index")
+    @@index([schoolName(length: 768)], map: "schoolName_index")
+    @@index([scrapedProfileId], map: "scrapedProfileId_index")
+    @@map("scraped_education_data")
+}
+
+model ScrapedEducationMediaData {
+    id                 String               @id @default(uuid())
+    title              String?              @map("title") @db.MediumText
+    details            String?              @map("details") @db.MediumText
+    url                String?              @map("url") @db.MediumText
+    createdAt          DateTime             @default(now()) @map("created_at")
+    updatedAt          DateTime             @updatedAt @map("updated_at")
+    scrapedEducationID String               @map("scraped_education_id")
+    education          ScrapedEducationData @relation(fields: [scrapedEducationID], references: [id])
+
+    @@index([scrapedEducationID], map: "scrapedEducationID_index")
+    @@map("scraped_education_media_data")
+}
+
+model ScrapedExperienceData {
+    id               String             @id @default(uuid())
+    title            String?            @map("title") @db.MediumText
+    company          String?            @map("company") @db.MediumText
+    endDate          DateTime?          @map("end_date")
+    city             String?            @map("city")
+    country          String?            @map("country")
+    province         String?            @map("province")
+    startDate        DateTime?          @map("start_date")
+    description      String?            @map("description") @db.MediumText
+    durationInDays   Int?               @map("duration_in_days")
+    employmentType   String?            @map("employment_type")
+    endDateIsPresent Boolean?           @map("end_date_is_present")
+    createdAt        DateTime           @default(now()) @map("created_at")
+    updatedAt        DateTime           @updatedAt @map("updated_at")
+    scrapedProfileId String             @map("scraped_profile_id")
+    profile          ScrapedProfileData @relation(fields: [scrapedProfileId], references: [id])
+
+    @@index([title(length: 768)], map: "title_index")
+    @@index([company(length: 768)], map: "company_index")
+    @@index([city, country], map: "city_country_index")
+    @@index([province], map: "province_index")
+    @@index([startDate], map: "startDate_index")
+    @@index([endDate], map: "endDate_index")
+    @@index([employmentType], map: "employmentType_index")
+    @@index([scrapedProfileId], map: "scrapedProfileId_index")
+    @@map("scraped_experience_data")
+}
+
+model ScrapedCertificationData {
+    id                  String             @id @default(uuid())
+    name                String?            @map("name") @db.MediumText
+    issueDate           DateTime?          @map("issue_date")
+    issuingOrganization String?            @map("issuing_organization") @db.MediumText
+    createdAt           DateTime           @default(now()) @map("created_at")
+    updatedAt           DateTime           @updatedAt @map("updated_at")
+    scrapedProfileId    String             @map("scraped_profile_id")
+    profile             ScrapedProfileData @relation(fields: [scrapedProfileId], references: [id])
+
+    @@index([name(length: 768)], map: "name_index")
+    @@index([issueDate], map: "issueDate_index")
+    @@index([issuingOrganization(length: 768)], map: "issuingOrganization_index")
+    @@index([scrapedProfileId], map: "scrapedProfileId_index")
+    @@map("scraped_certification_data")
+}
+
+model ScrapedProjectAccomplishmentData {
+    id               String             @id @default(uuid())
+    endDate          DateTime?          @map("end_date")
+    startDate        DateTime?          @map("start_date")
+    description      String?            @map("description") @db.MediumText
+    projectLink      String?            @map("project_link") @db.MediumText
+    projectName      String?            @map("project_name") @db.MediumText
+    createdAt        DateTime           @default(now()) @map("created_at")
+    updatedAt        DateTime           @updatedAt @map("updated_at")
+    scrapedProfileId String             @map("scraped_profile_id")
+    profile          ScrapedProfileData @relation(fields: [scrapedProfileId], references: [id])
+
+    @@index([endDate], map: "endDate_index")
+    @@index([startDate], map: "startDate_index")
+    @@index([projectName(length: 768)], map: "projectName_index")
+    @@index([scrapedProfileId], map: "scrapedProfileId_index")
+    @@map("scraped_project_accomplishment_data")
+}
+
+model ScrapedLanguageAccomplishmentData {
+    id               String             @id @default(uuid())
+    language         String?            @map("language") @db.MediumText
+    proficiency      String?            @map("proficiency") @db.MediumText
+    createdAt        DateTime           @default(now()) @map("created_at")
+    updatedAt        DateTime           @updatedAt @map("updated_at")
+    scrapedProfileId String             @map("scraped_profile_id")
+    profile          ScrapedProfileData @relation(fields: [scrapedProfileId], references: [id])
+
+    @@index([language(length: 768)], map: "language_index")
+    @@index([proficiency(length: 768)], map: "proficiency_index")
+    @@index([scrapedProfileId], map: "scrapedProfileId_index")
+    @@map("scraped_language_accomplishment_data")
+}
